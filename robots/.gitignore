@@ -1,2 +1,15 @@
 /bin/
 /.settings/
+/out/production/RobotsMe/gui/GameVisualizer$1.class
+/out/production/RobotsMe/gui/GameVisualizer$2.class
+/out/production/RobotsMe/gui/GameVisualizer$3.class
+/out/production/RobotsMe/gui/GameVisualizer.class
+/out/production/RobotsMe/gui/GameWindow.class
+/out/production/RobotsMe/log/LogChangeListener.class
+/out/production/RobotsMe/log/LogEntry.class
+/out/production/RobotsMe/log/Logger.class
+/out/production/RobotsMe/log/LogLevel.class
+/out/production/RobotsMe/gui/LogWindow.class
+/out/production/RobotsMe/log/LogWindowSource.class
+/out/production/RobotsMe/gui/MainApplicationFrame.class
+/out/production/RobotsMe/gui/RobotsProgram.class

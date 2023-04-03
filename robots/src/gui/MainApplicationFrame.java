@@ -90,7 +90,7 @@ public class MainApplicationFrame extends JFrame {
         exitMenu.getAccessibleContext().setAccessibleDescription("Закрытие приложения");
         {
             JMenuItem exitMenuItem = new JMenuItem("Выход");
-            exitMenuItem.addActionListener((event) -> handleExit());
+            exitMenuItem.addActionListener((event) -> exitApp());
             exitMenu.add(exitMenuItem);
         }
 
@@ -118,12 +118,13 @@ public class MainApplicationFrame extends JFrame {
         }
     }
 
-    private void handleExit() {
-        int confirmed = JOptionPane.showConfirmDialog(this,
-                "Вы уверены, что хотите выйти?", "Подтверждение выхода",
-                JOptionPane.YES_NO_OPTION);
-
-        if (confirmed == JOptionPane.YES_OPTION) {
+    private void exitApp() {
+        String[] options = {"Да", "Нет"};
+        int response = JOptionPane.showOptionDialog(this,
+                "Закрыть приложение?",
+                "Закрытие приложения",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        if (response == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }
