@@ -2,3 +2,9 @@
 /robots/.settings
 /robots/bin
 eclipse.bat
+/.idea/.gitignore
+/.idea/compiler.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/RobotsMe.iml
+/.idea/vcs.xml
