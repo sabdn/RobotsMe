@@ -25,6 +25,8 @@ import log.Logger;
 public class MainApplicationFrame extends JFrame
 {
     private final JDesktopPane desktopPane = new JDesktopPane();
+
+    private final ControlOfRobot controller;
     
     public MainApplicationFrame() {
         //Make the big window be indented 50 pixels from each edge
@@ -41,7 +43,9 @@ public class MainApplicationFrame extends JFrame
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
 
-        GameWindow gameWindow = new GameWindow();
+        this.controller = new ControlOfRobot();
+
+        GameWindow gameWindow = new GameWindow(controller);
         gameWindow.setSize(400,  400);
         addWindow(gameWindow);
 
