@@ -8,8 +8,8 @@ public class RobotState {
     private volatile double angularVelocity = 0.01;
 
     private volatile double angle = 0;
-    public static final double MAX_VELOCITY = 1;
-    public static final double MAX_ANGULAR_VELOCITY = 0.01;
+    public static final double MAX_VELOCITY = 0.1;
+    public static final double MAX_ANGULAR_VELOCITY = 0.010105;
 
     public void setRobotPositionX(double robotPositionX_) {
         robotPositionX = robotPositionX_;

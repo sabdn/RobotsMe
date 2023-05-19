@@ -4,11 +4,10 @@ import java.awt.BorderLayout;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-
 public class GameWindow extends JInternalFrame
 {
 
-    public GameWindow(ControlOfRobot controller)
+    public GameWindow(gui.ControlOfRobot controller)
     {
         super("Игровое поле", true, true, true, true);
 

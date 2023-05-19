@@ -1,7 +1,5 @@
 package gui;
 
-import jdk.jshell.execution.Util;
-
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -49,7 +47,7 @@ public class ControlOfRobot {
         return new Timer("events generator", true);
     }
 
-    public GameVisualizer getVisualizer() {
+    public Component getVisualizer() {
         return visualizer;
     }
 
@@ -178,20 +176,34 @@ public class ControlOfRobot {
         robot.setRobotDirection(newDirection);
     }
 
-    public void moveRobot(int targetPositionX, int targetPositionY, double duration){
-        var x = robot.getRobotPositionX();
-        var y = robot.getRobotPositionY();
-
-        robot.setAngularVelocity(applyLimits(robot.getAngularVelocity(), -RobotState.MAX_ANGULAR_VELOCITY,
-                RobotState.MAX_ANGULAR_VELOCITY));
-        double angDiff = angleDifference(robot.getAngle(), angleTo(x, y, targetPositionX, targetPositionY));
-
-        var angularVelocity = robot.getAngularVelocity();
-        var angle = robot.getAngle();
-        if(Math.abs(angDiff) > angularVelocity) {
-            robot.setAngle(angle + Math.signum(angDiff) * angularVelocity);
+    public void moveRobot(int targetPositionX, int targetPositionY, double duration) {
+        double distance = distance(targetPositionX, targetPositionY, robot.getRobotPositionX(), robot.getRobotPositionY());
+        if (distance < 0.5) {
+            return;
         }
-        move();
+        double velocity = RobotState.MAX_VELOCITY;
+        double angleToTarget = angleTo(robot.getRobotPositionX(), robot.getRobotPositionY(), targetPositionX, targetPositionY);
+        double angularVelocity = 0;
+
+        double angle = angleDifference(robot.getRobotDirection(), angleToTarget);
+
+        if (angle < 0) {
+            angularVelocity = -RobotState.MAX_ANGULAR_VELOCITY;
+        } else if (angle > 0) {
+            angularVelocity = RobotState.MAX_ANGULAR_VELOCITY;
+        }
+
+        velocity = applyLimits(velocity, 0, RobotState.MAX_VELOCITY);
+        angularVelocity = applyLimits(angularVelocity, -RobotState.MAX_ANGULAR_VELOCITY, RobotState.MAX_ANGULAR_VELOCITY);
+
+        double newX = robot.getRobotPositionX() + velocity * Math.cos(robot.getRobotDirection()) * duration;
+        double newY = robot.getRobotPositionY() + velocity * Math.sin(robot.getRobotDirection()) * duration;
+        double newDirection = asNormalizedRadians(robot.getRobotDirection() + angularVelocity * duration);
+
+        robot.setRobotPositionX(newX);
+        robot.setRobotPositionY(newY);
+        robot.setRobotDirection(newDirection);
     }
+
 
 }
