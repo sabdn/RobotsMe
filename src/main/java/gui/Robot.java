@@ -1,8 +1,8 @@
 package gui;
 
-public class RobotState {
-    private volatile double robotPositionX = 100;
-    private volatile double robotPositionY = 100;
+public class Robot {
+    private volatile double robotPositionX;
+    private volatile double robotPositionY;
     private volatile double robotDirection = 0;
 
     private volatile double angularVelocity = 0.01;
@@ -11,16 +11,23 @@ public class RobotState {
     public static final double MAX_VELOCITY = 0.1;
     public static final double MAX_ANGULAR_VELOCITY = 0.010105;
 
-    public void setRobotPositionX(double robotPositionX_) {
-        robotPositionX = robotPositionX_;
+    private int maximumViewingRange = 100;
+
+    public Robot(double startRobotPositionX, double startRobotPositionY){
+        robotPositionX = startRobotPositionX;
+        robotPositionY = startRobotPositionY;
+    }
+
+    public void setRobotPositionX(double positionX) {
+        robotPositionX = positionX;
     }
 
     public double getRobotPositionX() {
         return robotPositionX;
     }
 
-    public void setRobotPositionY(double robotPositionY_) {
-        robotPositionY = robotPositionY_;
+    public void setRobotPositionY(double positionY_) {
+        robotPositionY = positionY_;
     }
 
     public double getRobotPositionY() {
@@ -31,8 +38,8 @@ public class RobotState {
         return robotDirection;
     }
 
-    public void setRobotDirection(double robotDirection_) {
-        robotDirection = robotDirection_;
+    public void setRobotDirection(double direction) {
+        robotDirection = direction;
     }
 
     public void setAngle(double angle_) {
