@@ -20,12 +20,18 @@ public class ControlOfRobot {
     private int countRobots;
 
     public ControlOfRobot() {
+
         robots = new Vector<>();
-        robotSpawner(200, 200);
+        robotSpawner(50, 50);
         robotSpawner(50,  100);
+        robotSpawner(50, 150);
+        var robot = new Robot(50, 200);
+        robot.setMaximumViewingRange(30);
+        robots.add(robot);
         targets = new Vector<>();
-        targetSpawner(50, 50);
-        targetSpawner(300, 300);
+        targetSpawner(150, 50);
+        targetSpawner(150, 100);
+        targetSpawner(150, 150);
         visualizer = new GameVisualizer(this);
 
         timer.schedule(new TimerTask() { // эта штука
@@ -96,12 +102,39 @@ public class ControlOfRobot {
         moveRobot(targetPositionX, targetPositionY, duration);
     }
 
+    private Target findMinimumDistanceTarget(Robot robot, int maximumViewingRange){
+        var minimumDistance = 12312312321.0; //просто какое-то большое число для сравнения
+        Target minTarget = new Target(-1 ,-1);
+        for (var target : targets){
+            var distance = RobotMath.distance(target.getPositionX(), target.getPositionY(),
+                    robot.getRobotPositionX(), robot.getRobotPositionY());
+            if (distance > maximumViewingRange){
+                continue;
+            }
+            if (distance < minimumDistance){
+                minimumDistance = distance;
+                minTarget = target;
+            }
+        }
+        if (Double.compare(minimumDistance, 12312312321.0) == 0){
+            var x = (int) (Math.random()*601);
+            var y = (int) (Math.random()*601);
+            return new Target(x ,y);
+        }
+        return minTarget;
+    }
+
     public void moveRobot(int targetPositionX, int targetPositionY, double duration) {
+
         for (var robot : robots) {
-            double distance = RobotMath.distance(targetPositionX, targetPositionY, robot.getRobotPositionX(), robot.getRobotPositionY());
+            var minTarget = findMinimumDistanceTarget(robot, robot.getMaximumViewingRange());
+            var distance = RobotMath.distance(minTarget.getPositionX(), minTarget.getPositionY(),
+                    robot.getRobotPositionX(), robot.getRobotPositionY());
             if (distance < 0.5) {
                 return;
             }
+            targetPositionX = minTarget.getPositionX();
+            targetPositionY = minTarget.getPositionY();
             double velocity = Robot.MAX_VELOCITY;
             double angleToTarget = RobotMath.angleTo(robot.getRobotPositionX(), robot.getRobotPositionY(), targetPositionX, targetPositionY);
             double angularVelocity = 0;

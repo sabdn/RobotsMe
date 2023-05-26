@@ -57,4 +57,12 @@ public class Robot {
     public void setAngularVelocity(double angularVelocity_) {
         angularVelocity = angularVelocity_;
     }
+
+    public int getMaximumViewingRange() {
+        return maximumViewingRange;
+    }
+
+    public void setMaximumViewingRange(int maximumViewingRange) {
+        this.maximumViewingRange = maximumViewingRange;
+    }
 }
