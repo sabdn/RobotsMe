@@ -4,13 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 public class GameVisualizer extends JPanel
 {
-    private final ControlOfRobot controller;
-    public GameVisualizer(ControlOfRobot robotController) {
+    private final RobotControl controller;
+    public GameVisualizer(RobotControl robotController) {
         controller = robotController;
     }
 
@@ -23,15 +24,21 @@ public class GameVisualizer extends JPanel
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
+//        var robots = new ArrayList<>();
+//        robots.addAll(controller.getRobots());
         var robots = controller.getRobots();
-        for (var robot : robots) {
-            int robotCenterX = round(robot.getRobotPositionX());
-            int robotCenterY = round(robot.getRobotPositionY());
-            drawRobot(g2d, robot.getRobotDirection(), robotCenterX, robotCenterY);
+        synchronized(robots) {
+            for (var robot : robots) {
+                int robotCenterX = round(robot.getRobotPositionX());
+                int robotCenterY = round(robot.getRobotPositionY());
+                drawRobot(g2d, robot.getRobotDirection(), robotCenterX, robotCenterY, robot);
+            }
         }
         var targets = controller.getTargets();
-        for (var target : targets) {
-            drawTarget(g2d, target.getPositionX(), target.getPositionY());
+        synchronized (targets) {
+            for (var target : targets) {
+                drawTarget(g2d, target.getPositionX(), target.getPositionY(), target);
+            }
         }
     }
 
@@ -40,18 +47,18 @@ public class GameVisualizer extends JPanel
         g.fillOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
     }
 
-    private void drawRobot(Graphics2D g, double direction, int robotCenterX, int robotCenterY) {
+    private void drawRobot(Graphics2D g, double direction, int robotCenterX, int robotCenterY, Robot robot) {
         AffineTransform t = AffineTransform.getRotateInstance(
                 direction, robotCenterX, robotCenterY);
         g.setTransform(t);
-        g.setColor(Color.MAGENTA);
-        fillOval(g, robotCenterX, robotCenterY, 30, 10);
+        g.setColor(robot.getColor());
+        fillOval(g, robotCenterX, robotCenterY, LocalConst.robotWidth, LocalConst.robotHeight); // сам робот
         g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX, robotCenterY, 30, 10);
+        drawOval(g, robotCenterX, robotCenterY, LocalConst.robotWidth, LocalConst.robotHeight); // оконтовка робота
         g.setColor(Color.WHITE);
-        fillOval(g, robotCenterX + 10, robotCenterY, 5, 5);
+        fillOval(g, robotCenterX + LocalConst.distanceFromBodyToEye, robotCenterY, LocalConst.eyeRadius, LocalConst.eyeRadius); // глаз робота
         g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX + 10, robotCenterY, 5, 5);
+        drawOval(g, robotCenterX + LocalConst.distanceFromBodyToEye, robotCenterY, LocalConst.eyeRadius, LocalConst.eyeRadius); // окантовка глаза
     }
 
     private static void drawOval(Graphics g, int centerX, int centerY, int diam1, int diam2)
@@ -59,12 +66,12 @@ public class GameVisualizer extends JPanel
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
     }
 
-    private void drawTarget(Graphics2D g, int x, int y)
+    private void drawTarget(Graphics2D g, int x, int y, Target target)
     {
         AffineTransform t = AffineTransform.getRotateInstance(
                 0, 0, 0);
         g.setTransform(t);
-        g.setColor(Color.GREEN);
+        g.setColor(target.getColor());
         fillOval(g, x, y, 5, 5);
         g.setColor(Color.BLACK);
         drawOval(g, x, y, 5, 5);

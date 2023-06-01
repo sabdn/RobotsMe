@@ -1,5 +1,8 @@
 package gui;
-
+/** Класс с набором математических операций для движения робота
+ @author ColdStorm, Sabdn
+ @version 1.0
+ */
 public class RobotMath {
     private static double calculateDistance(double x1, double y1, double x2, double y2) {
         double diffX = x1 - x2;

@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 public class GameWindow extends JInternalFrame
 {
 
-    public GameWindow(gui.ControlOfRobot controller)
+    public GameWindow(RobotControl controller)
     {
         super("Игровое поле", true, true, true, true);
 

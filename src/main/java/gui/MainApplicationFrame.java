@@ -3,12 +3,9 @@ package gui;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
-import log.Localization;
 import log.Logger;
 
 
@@ -21,9 +18,7 @@ import log.Logger;
 public class MainApplicationFrame extends JFrame
 {
     private final JDesktopPane desktopPane = new JDesktopPane();
-
-    private Localization lok = new Localization();
-    private final ControlOfRobot controller;
+    private final RobotControl controller;
 
     public MainApplicationFrame() {
         //Make the big window be indented 50 pixels from each edge
@@ -40,15 +35,15 @@ public class MainApplicationFrame extends JFrame
         LogWindow logWindow = createLogWindow();
         addWindow(logWindow);
 
-        this.controller = new ControlOfRobot();
+        controller = new RobotControl();
 
         gui.GameWindow gameWindow = new gui.GameWindow(controller);
-        gameWindow.setSize(400,  400);
+        gameWindow.setSize(600,  600);
         addWindow(gameWindow);
 
 
         setJMenuBar(generateMenuBar());
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     protected LogWindow createLogWindow()
@@ -67,7 +62,6 @@ public class MainApplicationFrame extends JFrame
         desktopPane.add(frame);
         frame.setVisible(true);
     }
-
 
     private JMenuBar generateMenuBar()
     {
@@ -128,40 +122,8 @@ public class MainApplicationFrame extends JFrame
             exitMenu.add(addButtonExit);
         }
 
-
-        JMenu settingsMenu = new JMenu(lok.getStringResource("settings"));
-        settingsMenu.setMnemonic(KeyEvent.VK_V);
-        settingsMenu.getAccessibleContext().setAccessibleDescription(
-                "Настройки");
-        lok.addElement(settingsMenu, "settings");
-
-        JMenu changeLanguageMenu = new JMenu(lok.getStringResource("changeLanguage"));
-        settingsMenu.add(changeLanguageMenu);
-        lok.addElement(settingsMenu, "changeLanguage");
-
-        {
-            JMenuItem enLanguageButton = new JMenuItem(
-                    lok.getStringResource("english"),
-                    KeyEvent.VK_X);
-            enLanguageButton.addActionListener((event) -> {
-                lok.changeLanguage("en");
-            });
-            changeLanguageMenu.add(enLanguageButton);
-            lok.addElement(enLanguageButton, "english");
-
-            JMenuItem ruLanguageButton = new JMenuItem(
-                    lok.getStringResource("russian"),
-                    KeyEvent.VK_L);
-            ruLanguageButton.addActionListener((event) -> {
-                lok.changeLanguage("ru");
-            });
-            changeLanguageMenu.add(ruLanguageButton);
-            lok.addElement(ruLanguageButton, "russian");
-
-        }
         menuBar.add(lookAndFeelMenu);
         menuBar.add(testMenu);
-        menuBar.add(settingsMenu);
         menuBar.add(exitMenu);
         return menuBar;
     }
