@@ -15,7 +15,7 @@ public class Robot {
     private volatile double robotDirection = 0;
     private volatile double angularVelocity = 0.01;
     private volatile double angle = 0;
-    private volatile int maximumViewingRange = 1000000;
+    private volatile int sightCircle = 1000000;
     private volatile double power = 0.5;
     private volatile double speed = 0.1;
     private volatile Color color = new Color(139, 0, 255);
@@ -25,6 +25,13 @@ public class Robot {
     private volatile boolean eating = false;
     private volatile int numberSecondsEating = 0;
 
+    private volatile boolean lookingForCouple = false;
+    private volatile boolean alreadyTaken = false;
+    private volatile boolean actOfLove = false;
+    private volatile int numberSecondsActOfLove;
+    private volatile int OriginHealth;
+
+    private volatile Robot partner;
 
     public Robot(double startRobotPositionX, double startRobotPositionY){
         robotPositionX = startRobotPositionX;
@@ -60,12 +67,6 @@ public class Robot {
     }
     public void setAngularVelocity(double angularVelocity_) {
         angularVelocity = angularVelocity_;
-    }
-    public int getMaximumViewingRange() {
-        return maximumViewingRange;
-    }
-    public void setMaximumViewingRange(int newMaximumViewingRange) {
-        maximumViewingRange = newMaximumViewingRange;
     }
     public double getSpeed() {
         return speed;
@@ -126,5 +127,54 @@ public class Robot {
     }
     public void setNumberSecondsEating(int numberSecondsEating) {
         this.numberSecondsEating = numberSecondsEating;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+    public boolean isLookingForCouple() {
+        return lookingForCouple;
+    }
+    public void setLookingForCouple(boolean lookingForCouple) {
+        this.lookingForCouple = lookingForCouple;
+    }
+    public boolean isAlreadyTaken() {
+        return alreadyTaken;
+    }
+    public void setAlreadyTaken(boolean alreadyTaken) {
+        this.alreadyTaken = alreadyTaken;
+    }
+    public boolean isActOfLove() {
+        return actOfLove;
+    }
+    public void setActOfLove(boolean actOfLove) {
+        this.actOfLove = actOfLove;
+    }
+    public int getNumberSecondsActOfLove() {
+        return numberSecondsActOfLove;
+    }
+    public synchronized void increaseSecondsActOfLoveByOne(){
+        numberSecondsActOfLove++;
+    }
+    public void resetNumberSecondsActOfLove(){
+        numberSecondsActOfLove = 0;
+    }
+    public Robot getPartner() {
+        return partner;
+    }
+    public void setPartner(Robot partner) {
+        this.partner = partner;
+    }
+    public void setOriginHealth(int originHealth) {
+        OriginHealth = originHealth;
+    }
+    public int getOriginHealth() {
+        return OriginHealth;
+    }
+    public int getSightCircle() {
+        return sightCircle;
+    }
+    public void setSightCircle(int newMaximumViewingRange) {
+        sightCircle = newMaximumViewingRange;
     }
 }
