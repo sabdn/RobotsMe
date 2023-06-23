@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 import log.Logger;
+import logic.RobotControl;
 
 
 /**

@@ -1,4 +1,4 @@
-package gui;
+package logic;
 
 import java.awt.*;
 
@@ -32,6 +32,9 @@ public class Robot {
     private volatile int OriginHealth;
 
     private volatile Robot partner;
+    private volatile int coolDownAfterActOfLove = 0;
+    private volatile boolean needCoolDownAfterActOfLove = false;
+
 
     public Robot(double startRobotPositionX, double startRobotPositionY){
         robotPositionX = startRobotPositionX;
@@ -177,4 +180,20 @@ public class Robot {
     public void setSightCircle(int newMaximumViewingRange) {
         sightCircle = newMaximumViewingRange;
     }
+    public int getCoolDownAfterActOfLove() {
+        return coolDownAfterActOfLove;
+    }
+    public void resetCoolDownAfterActOfLove() {
+        coolDownAfterActOfLove = 0;
+    }
+    public synchronized void increaseCoolDownAfterActOfLoveByOne(){
+        coolDownAfterActOfLove++;
+    }
+    public boolean isNeedCoolDownAfterActOfLove() {
+        return needCoolDownAfterActOfLove;
+    }
+    public void setNeedCoolDownAfterActOfLove(boolean needCoolDownAfterActOfLove) {
+        this.needCoolDownAfterActOfLove = needCoolDownAfterActOfLove;
+    }
+
 }

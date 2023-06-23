@@ -1,4 +1,4 @@
-package gui;
+package logic;
 
 import java.awt.*;
 /** Класс служит для хранения текущего состояния цели

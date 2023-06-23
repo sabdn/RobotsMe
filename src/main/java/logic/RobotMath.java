@@ -1,4 +1,4 @@
-package gui;
+package logic;
 /** Класс с набором математических операций для движения робота
  @author ColdStorm, Sabdn
  @version 1.0

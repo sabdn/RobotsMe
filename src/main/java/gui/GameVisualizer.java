@@ -1,5 +1,10 @@
 package gui;
 
+import logic.RobotConst;
+import logic.Robot;
+import logic.RobotControl;
+import logic.Target;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -51,13 +56,13 @@ public class GameVisualizer extends JPanel
                 direction, robotCenterX, robotCenterY);
         g.setTransform(t);
         g.setColor(robot.getColor());
-        fillOval(g, robotCenterX, robotCenterY, LocalConst.ROBOT_WIDTH, LocalConst.ROBOT_HEIGHT); // сам робот
+        fillOval(g, robotCenterX, robotCenterY, RobotConst.ROBOT_WIDTH, RobotConst.ROBOT_HEIGHT); // сам робот
         g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX, robotCenterY, LocalConst.ROBOT_WIDTH, LocalConst.ROBOT_HEIGHT); // оконтовка робота
+        drawOval(g, robotCenterX, robotCenterY, RobotConst.ROBOT_WIDTH, RobotConst.ROBOT_HEIGHT); // оконтовка робота
         g.setColor(Color.WHITE);
-        fillOval(g, robotCenterX + LocalConst.DISTANCE_FROM_BODY_TO_EYE, robotCenterY, LocalConst.EYE_RADIUS, LocalConst.EYE_RADIUS); // глаз робота
+        fillOval(g, robotCenterX + RobotConst.DISTANCE_FROM_BODY_TO_EYE, robotCenterY, RobotConst.EYE_RADIUS, RobotConst.EYE_RADIUS); // глаз робота
         g.setColor(Color.BLACK);
-        drawOval(g, robotCenterX + LocalConst.DISTANCE_FROM_BODY_TO_EYE, robotCenterY, LocalConst.EYE_RADIUS, LocalConst.EYE_RADIUS); // окантовка глаза
+        drawOval(g, robotCenterX + RobotConst.DISTANCE_FROM_BODY_TO_EYE, robotCenterY, RobotConst.EYE_RADIUS, RobotConst.EYE_RADIUS); // окантовка глаза
     }
 
     private static void drawOval(Graphics g, int centerX, int centerY, int diam1, int diam2)

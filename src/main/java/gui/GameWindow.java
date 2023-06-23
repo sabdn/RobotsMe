@@ -1,5 +1,7 @@
 package gui;
 
+import logic.RobotControl;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JInternalFrame;

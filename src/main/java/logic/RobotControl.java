@@ -1,4 +1,6 @@
-package gui;
+package logic;
+
+import gui.GameVisualizer;
 
 import java.awt.*;
 import java.util.*;
@@ -71,31 +73,31 @@ public class RobotControl {
 
     private void makeFastRobot(double startRobotPositionX, double startRobotPositionY){
         var robot = new Robot(startRobotPositionX, startRobotPositionY);
-        robot.setSpeed(LocalConst.MAXIMUM_SPEED);
-        robot.setSightCircle(LocalConst.DEFAULT_VIEWING_RANGE);
-        robot.setHealth(LocalConst.DEFAULT_HEALTH);
-        robot.setOriginHealth(LocalConst.DEFAULT_HEALTH);
-        robot.setColor(LocalConst.DEFAULT_COLOR_FAST_ROBOTS);
+        robot.setSpeed(RobotConst.MAXIMUM_SPEED);
+        robot.setSightCircle(RobotConst.DEFAULT_VIEWING_RANGE);
+        robot.setHealth(RobotConst.MINIMUM_HEALTH);
+        robot.setOriginHealth(RobotConst.MINIMUM_HEALTH);
+        robot.setColor(RobotConst.DEFAULT_COLOR_FAST_ROBOTS);
         robots.add(robot);
     }
 
     private void makeVigilantRobot(double startRobotPositionX, double startRobotPositionY){
         var robot = new Robot(startRobotPositionX, startRobotPositionY);
-        robot.setSpeed(LocalConst.DEFAULT_SPEED);
-        robot.setSightCircle(LocalConst.MAXIMUM_VIEWING_RANGE);
-        robot.setHealth(LocalConst.DEFAULT_HEALTH);
-        robot.setOriginHealth(LocalConst.DEFAULT_HEALTH);
-        robot.setColor(LocalConst.DEFAULT_COLOR_VIGILANT_ROBOTS);
+        robot.setSpeed(RobotConst.DEFAULT_SPEED);
+        robot.setSightCircle(RobotConst.MAXIMUM_VIEWING_RANGE);
+        robot.setHealth(RobotConst.MINIMUM_HEALTH);
+        robot.setOriginHealth(RobotConst.MINIMUM_HEALTH);
+        robot.setColor(RobotConst.DEFAULT_COLOR_VIGILANT_ROBOTS);
         robots.add(robot);
     }
 
     private void makeHardyRobot(double startRobotPositionX, double startRobotPositionY){
         var robot = new Robot(startRobotPositionX, startRobotPositionY);
-        robot.setSpeed(LocalConst.DEFAULT_SPEED);
-        robot.setSightCircle(LocalConst.DEFAULT_VIEWING_RANGE);
-        robot.setHealth(LocalConst.MAXIMUM_HEALTH);
-        robot.setOriginHealth(LocalConst.MAXIMUM_HEALTH);
-        robot.setColor(LocalConst.DEFAULT_COLOR_HARDY_ROBOTS);
+        robot.setSpeed(RobotConst.DEFAULT_SPEED);
+        robot.setSightCircle(RobotConst.DEFAULT_VIEWING_RANGE);
+        robot.setHealth(RobotConst.MAXIMUM_HEALTH);
+        robot.setOriginHealth(RobotConst.MAXIMUM_HEALTH);
+        robot.setColor(RobotConst.DEFAULT_COLOR_HARDY_ROBOTS);
         robots.add(robot);
     }
 
@@ -127,31 +129,38 @@ public class RobotControl {
                 if (robot.isEating()){
                     robot.increaseNumberSecondsEatingByOne();
                 }
-                if (robot.getAge() >= LocalConst.MATURE_AGE_IN_SECONDS && robot.getHealth() > LocalConst.ENOUGH_HEALTH_FOR_BREEDING){
+                if (robot.getAge() >= RobotConst.MATURE_AGE_IN_SECONDS && robot.getHealth() > RobotConst.ENOUGH_HEALTH_FOR_BREEDING){
                     robot.setLookingForCouple(true);
                 }
-                if (robot.isLookingForCouple() && robot.getHealth() < LocalConst.MINIMUM_HEALTH_FOR_BREEDING){
+                if (robot.isLookingForCouple() && robot.getHealth() < RobotConst.MINIMUM_HEALTH_FOR_BREEDING){
                     if (!robot.isAlreadyTaken()) {
                         returnToOriginalLovingSettings(robot);
                     } else {
                         var partner = robot.getPartner();
-                        partner.setPartner(null);
+                        if (partner != null){
+                            partner.setPartner(null);
+                        }
                         returnToOriginalLovingSettings(robot);
                     }
                 }
                 if (robot.isActOfLove()){
                     robot.increaseSecondsActOfLoveByOne();
-                    if (robot.getNumberSecondsActOfLove() >= LocalConst.DURATION_ACT_OF_LOVE_IN_SECONDS){
-                        makeNewRobot(robot, robot.getPartner());
-                        returnToOriginalLovingSettings(robot.getPartner());
+                    if (robot.getNumberSecondsActOfLove() >= RobotConst.DURATION_ACT_OF_LOVE_IN_SECONDS){
+                        if (robot.getPartner() != null){ //костыль, в какой то момент вылетает ошибка, что партнёр - null
+                            makeNewRobot(robot, robot.getPartner());
+                            robot.setNeedCoolDownAfterActOfLove(true);
+                            robot.getPartner().setNeedCoolDownAfterActOfLove(true);
+                            returnToOriginalLovingSettings(robot.getPartner());
+                        }
                         returnToOriginalLovingSettings(robot);
+
                     }
                 }
             }
         }
-        var x = (int) (Math.random() * 601);
-        var y = (int) (Math.random() * 601);
-        targetSpawner(x, y);
+//        var x = (int) (Math.random() * 601);
+//        var y = (int) (Math.random() * 601);
+//        targetSpawner(x, y);
     }
 
     private static Timer initTimer() {
@@ -203,12 +212,12 @@ public class RobotControl {
 
     private void checkingRobotsAround(Robot robot){
         for (var tempRobot : robots){
-            if (robot != tempRobot) {
+            if (robot != tempRobot && !robot.isNeedCoolDownAfterActOfLove()) {
                 var distanceBetweenRobots = RobotMath.distance(robot.getRobotPositionX(), robot.getRobotPositionY(), tempRobot.getRobotPositionX(), tempRobot.getRobotPositionY());
                 if (distanceBetweenRobots > robot.getSightCircle()) {
                     continue;
                 }
-                if (tempRobot.isLookingForCouple() && !tempRobot.isAlreadyTaken()) {
+                if (tempRobot.isLookingForCouple() && !tempRobot.isAlreadyTaken() && !tempRobot.isNeedCoolDownAfterActOfLove()) {
                     tempRobot.setAlreadyTaken(true);
                     tempRobot.setPartner(robot);
                     robot.setAlreadyTaken(true);
@@ -258,7 +267,7 @@ public class RobotControl {
                     if (!robot.isEating()) {
                         robot.setEating(true);
                     }
-                    if (robot.getNumberSecondsEating() >= LocalConst.NUMBER_SECONDS_EATING) {
+                    if (robot.getNumberSecondsEating() >= RobotConst.NUMBER_SECONDS_EATING) {
                         robot.setEating(false);
                         robot.setNumberSecondsEating(0);
                         robot.increaseHealth(10);
@@ -275,14 +284,14 @@ public class RobotControl {
                 }
                 minTarget = findMinimumDistanceTarget(robot, robot.getSightCircle());
             } else {
-                try {
+                try { //todo: разбить на абстрации
                     if (!robot.isAlreadyTaken()) {
                         checkingRobotsAround(robot);
                     }
                     var distanceBetweenRobots = RobotMath.distance(robot.getRobotPositionX(), robot.getRobotPositionY(),
                             robot.getPartner().getRobotPositionX(), robot.getPartner().getRobotPositionY());
                     if (distanceBetweenRobots < 0.5){
-                        robot.setActOfLove(true);
+                        robot.setActOfLove(true); //BREEDING
                         robot.getPartner().setActOfLove(true);
                         continue;
                     }
@@ -334,30 +343,25 @@ public class RobotControl {
         if (lucky){
             robot.setSpeed(Math.max(firstRobot.getSpeed(), secondRobot.getSpeed()));
         } else {
-            var speed = Math.max((firstRobot.getSpeed() + secondRobot.getSpeed()) / 2, LocalConst.MINIMUM_SPEED);
+            var speed = Math.max((firstRobot.getSpeed() + secondRobot.getSpeed()) / 2, RobotConst.MINIMUM_SPEED);
             robot.setSpeed(speed);
         }
 
-        lucky = random.nextInt(4) == 0;
+        lucky = random.nextInt(4) == 0; //todo: вынести в функцию
         if (lucky){
             robot.setHealth(Math.max(firstRobot.getOriginHealth(), secondRobot.getOriginHealth()));
         } else {
             var health = Math.min(firstRobot.getOriginHealth(), secondRobot.getOriginHealth());
             robot.setHealth(health);
-            if (robot.getHealth() == 0){
-                System.out.println("Первый робот");
-                System.out.println(firstRobot.getOriginHealth());
-                System.out.println("Второй робот");
-                System.out.println(secondRobot.getOriginHealth());
-            }
         }
+        robot.setOriginHealth(robot.getHealth());
 
         lucky = random.nextInt(4) == 0;
         if (lucky){
             robot.setSightCircle(Math.max(firstRobot.getSightCircle(), secondRobot.getSightCircle()));
         } else {
             var sightCircle = Math.max((firstRobot.getSightCircle() + secondRobot.getSightCircle()) / 2,
-                    LocalConst.MINIMUM_VIEWING_RANGE);
+                    RobotConst.MINIMUM_VIEWING_RANGE);
             robot.setSightCircle(sightCircle);
         }
 
